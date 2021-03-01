@@ -16,7 +16,27 @@ require('inc/header.php'); ?>
   <li><a href="register.php">Créer un compte</a></li>
   <li><a href="login.php">Se connecter</a></li>
   <li><a href="logout.php">Déconnexion</a></li>
+  <button type="button" id="button" name="button">Filtres</button>
 </ul>
+<section id="filtre_search">
+
+  <h1>Filtre de recherche</h1>
+  <label for="titre">Titre A a Z</label>
+  <input type="checkbox" name="titre" value="titre">
+  <label for="year">année voulu</label>
+  <input type="number" placeholder="Année" name="year" value="">
+  <label for="genre">Genres</label>
+  <input type="checkbox" name="genres" value="genres">
+  <label for="author">Auteur</label>
+  <input type="text" name="author" placeholder="Auteur" value="">
+
+</section>
+<script type="text/javascript">
+  function filtre(){
+    var btn = document.getElementById('#button')
+
+  }
+</script>
 
 <?php foreach ($movies as $movie): ?>
 <div class="film">
