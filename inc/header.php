@@ -8,7 +8,12 @@
   </head>
   <body>
     <header>
-
+      <p><a href="admin/index.php">Admin</a></p>
+      <ul>
+        <li><a href="register.php">Créer un compte</a></li>
+        <li><a href="login.php">Se connecter</a></li>
+        <li><a href="logout.php">Déconnexion</a></li>
+      </ul>
     </header>
 
     <main>

@@ -11,26 +11,33 @@ $movies = $query->fetchAll();
 // debug($movies);
 require('inc/header.php'); ?>
 
-<p><a href="admin/index.php">Admin</a></p>
-<ul>
-  <li><a href="register.php">Créer un compte</a></li>
-  <li><a href="login.php">Se connecter</a></li>
-  <li><a href="logout.php">Déconnexion</a></li>
-  <button type="button" id="button" name="button">Filtres</button>
-</ul>
+<button type="button" id="button" name="button">Filtres</button>
 <section id="filtre_search">
 
-  <h1>Filtre de recherche</h1>
-  <label for="titre">Titre A a Z</label>
-  <input type="checkbox" name="titre" value="titre">
-  <label for="year">année voulu</label>
-  <input type="number" placeholder="Année" name="year" value="">
-  <label for="genre">Genres</label>
-  <input type="checkbox" name="genres" value="genres">
-  <label for="author">Auteur</label>
-  <input type="text" name="author" placeholder="Auteur" value="">
+  <form method="POST">
+    <h1>Filtre de recherche</h1>
+
+    <label for="titre">Titre A a Z</label>
+    <input type="checkbox" name="titre" value="<?php if(!empty($_POST['titre'])) {echo $_POST['titre'];} ?>">
+    <span class="errors"><?php if(!empty($errors['titre'])) {echo $errors['titre'];} ?></span>
+
+    <label for="year">année voulu</label>
+    <input type="number" placeholder="Année" name="year" value="<?php if(!empty($_POST['year'])) {echo $_POST['year'];} ?>">
+    <span class="errors"><?php if(!empty($errors['year'])) {echo $errors['year'];} ?></span>
+
+    <label for="genre">Genres</label>
+    <input type="text" name="genres" placeholder="Drame, Comedie, Action etc..." value="<?php if(!empty($_POST['genres'])) {echo $_POST['genres'];} ?>">
+    <span class="errors"><?php if(!empty($errors['genres'])) {echo $errors['genres'];} ?></span>
+
+    <label for="author">Auteur</label>
+    <input type="text" name="author" placeholder="Auteur" value="<?php if(!empty($_POST['author'])) {echo $_POST['author'];} ?>">
+    <span class="errors"><?php if(!empty($errors['author'])) {echo $errors['author'];} ?></span>
+
+    <input type="submit" name="submited" value="Rechercher">
+  </form>
 
 </section>
+
 <script type="text/javascript">
   function filtre(){
     var btn = document.getElementById('#button')

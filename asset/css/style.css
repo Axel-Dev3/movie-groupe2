@@ -64,3 +64,6 @@ ul {
   display: flex;
   flex-direction: column;
 }
+#filtre_search {
+  display: none;
+}
