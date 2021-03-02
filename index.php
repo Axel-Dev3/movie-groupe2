@@ -10,53 +10,46 @@ $query->execute();
 $movies = $query->fetchAll();
 
 $categorys = array('drama','animation','comedy');
-$anne = array ('year1', 'year2');
+
 if (!empty($_POST['submited'])) {
   debug($_POST);
   $genres = array();
-  $years = array();
   
   
   if(!empty($_POST['genres'])) {
     $genres = $_POST['genres'];
   }
 
-  if(!empty($_POST['years'])) {
-    $years = $_POST['years'];
-  }
+ 
   $sql = "SELECT * FROM movies_full WHERE 1 = 1";
 
   foreach($genres as $genre) {
     $sql .= " AND genres LIKE :$genre";
   }
 
-
-  foreach ($years as $year) {
-  $sql .= "AND year LIKE :$year";
-}
+  if(!empty($_POST['year1']) && !empty($_POST['year2'])) {
+    $year1 = $_POST['year1'];
+    $year2 = $_POST['year2'];
+    $sql .= " AND (year BETWEEN :year1 AND :year2)";
+  }
 
   $sql .= " ORDER BY RAND() LIMIT 10";
-
+  // prepare 
   $query = $pdo->prepare($sql);
+  // protection injection sql
   foreach($genres as $genre) {
     $query->bindValue(':'.$genre,'%'. $genre . '%');
   }
-
-  $query = $pdo->prepare($sql);
-  foreach ($years as $year) {
-    $query->bindValue(':'.$year,'%'. $year . '%');
+  if(!empty($_POST['year1']) && !empty($_POST['year2'])) {
+    $query->bindValue(':year1',$year1);
+    $query->bindValue(':year2',$year2);
   }
-   
-
+  // execute 
   $query->execute();
   $movies = $query->fetchAll();
 
-echo $sql;
-
-
 }
 // debug($_POST);
-// echo 'coucou michel';
 // debug($movies);
 require('inc/header.php'); ?>
 
@@ -73,12 +66,17 @@ require('inc/header.php'); ?>
   <input type="checkbox" name="titre" value="">
 
   <label for="years">Choix des Années </label>
-  <select name="years" id="years">
+  <select name="year1" id="year1">
     <?php for ($i = 1887; $i < 2015; $i++) {
       echo '<option value="'.$i.'">'.$i.'</option>';
     } ?>
   </select>
 
+  <select name="year2" id="year2">
+    <?php for ($i = 1888; $i < 2015; $i++) {
+      echo '<option value="'.$i.'">'.$i.'</option>';
+    } ?>
+  </select>
 
   <?php foreach($categorys as $category) { ?>
     <label for="<?= $category; ?>"><?= ucfirst($category); ?></label>
@@ -93,17 +91,6 @@ require('inc/header.php'); ?>
 
 </section>
 
-<!-- gestion du filtre de recherche en javascript -->
-<script type="text/javascript">
-  
-    var filtre = document.getElementById('filtre_search');
-    var btn = document.getElementById('button');
-    btn.addEventListener('click' ,function(event){ 
-    event.preventDefault();
-    filtre.style.display = 'block';  
- })
-
-</script>
 
  <!-- afficher les films  -->
 <?php foreach ($movies as $movie): ?>
@@ -119,4 +106,18 @@ require('inc/header.php'); ?>
   <p><a href="index.php">+ de films</a></p>
 </div>
 
+
+
+
+<!-- gestion du filtre de recherche en javascript -->
+<script type="text/javascript">
+  
+    var filtre = document.getElementById('filtre_search');
+    var btn = document.getElementById('button');
+    btn.addEventListener('click' ,function(event){ 
+    event.preventDefault();
+    filtre.style.display = 'block';  
+ })
+
+</script>
 <?php require('inc/footer.php');
