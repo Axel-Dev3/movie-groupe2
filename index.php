@@ -1,6 +1,8 @@
-<?php require('inc/functions.php');
-require('inc/pdo.php');
+<?php
 session_start();
+require('inc/functions.php');
+require('inc/pdo.php');
+
 
 $sql = "SELECT * FROM movies_full ORDER BY RAND() LIMIT 10";
 $query = $pdo->prepare($sql);
@@ -54,6 +56,8 @@ echo $sql;
 
 }
 // debug($_POST);
+// echo 'coucou michel';
+// debug($movies);
 require('inc/header.php'); ?>
 
 
