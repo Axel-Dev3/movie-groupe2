@@ -2,49 +2,106 @@
 require('inc/pdo.php');
 session_start();
 
-$sql = "SELECT * FROM movies_full ORDER BY RAND() LIMIT 100";
+$sql = "SELECT * FROM movies_full ORDER BY RAND() LIMIT 10";
 $query = $pdo->prepare($sql);
 $query->execute();
 $movies = $query->fetchAll();
 
+$categorys = array('drama','animation','comedy');
+$anne = array ('year1', 'year2');
+if (!empty($_POST['submited'])) {
+  debug($_POST);
+  $genres = array();
+  $years = array();
+  
+  
+  if(!empty($_POST['genres'])) {
+    $genres = $_POST['genres'];
+  }
 
-// debug($movies);
+  if(!empty($_POST['years'])) {
+    $years = $_POST['years'];
+  }
+  $sql = "SELECT * FROM movies_full WHERE 1 = 1";
+
+  foreach($genres as $genre) {
+    $sql .= " AND genres LIKE :$genre";
+  }
+
+
+  foreach ($years as $year) {
+  $sql .= "AND year LIKE :$year";
+}
+
+  $sql .= " ORDER BY RAND() LIMIT 10";
+
+  $query = $pdo->prepare($sql);
+  foreach($genres as $genre) {
+    $query->bindValue(':'.$genre,'%'. $genre . '%');
+  }
+
+  $query = $pdo->prepare($sql);
+  foreach ($years as $year) {
+    $query->bindValue(':'.$year,'%'. $year . '%');
+  }
+   
+
+  $query->execute();
+  $movies = $query->fetchAll();
+
+echo $sql;
+
+
+}
+// debug($_POST);
 require('inc/header.php'); ?>
 
+
+<!-- gestion du filtre de recherche -->
 <button type="button" id="button" name="button">Filtres</button>
 <section id="filtre_search">
 
-  <form method="POST">
-    <h1>Filtre de recherche</h1>
+<form method="POST">
 
-    <label for="titre">Titre A a Z</label>
-    <input type="checkbox" name="titre" value="<?php if(!empty($_POST['titre'])) {echo $_POST['titre'];} ?>">
-    <span class="errors"><?php if(!empty($errors['titre'])) {echo $errors['titre'];} ?></span>
+  <h1>Filtre de recherche</h1>
 
-    <label for="year">année voulu</label>
-    <input type="number" placeholder="Année" name="year" value="<?php if(!empty($_POST['year'])) {echo $_POST['year'];} ?>">
-    <span class="errors"><?php if(!empty($errors['year'])) {echo $errors['year'];} ?></span>
+  <label for="titre">Titre Ordre croissant</label>
+  <input type="checkbox" name="titre" value="">
 
-    <label for="genre">Genres</label>
-    <input type="text" name="genres" placeholder="Drame, Comedie, Action etc..." value="<?php if(!empty($_POST['genres'])) {echo $_POST['genres'];} ?>">
-    <span class="errors"><?php if(!empty($errors['genres'])) {echo $errors['genres'];} ?></span>
+  <label for="years">Choix des Années </label>
+  <select name="years" id="years">
+    <?php for ($i = 1887; $i < 2015; $i++) {
+      echo '<option value="'.$i.'">'.$i.'</option>';
+    } ?>
+  </select>
 
-    <label for="author">Auteur</label>
-    <input type="text" name="author" placeholder="Auteur" value="<?php if(!empty($_POST['author'])) {echo $_POST['author'];} ?>">
-    <span class="errors"><?php if(!empty($errors['author'])) {echo $errors['author'];} ?></span>
 
-    <input type="submit" name="submited" value="Rechercher">
-  </form>
+  <?php foreach($categorys as $category) { ?>
+    <label for="<?= $category; ?>"><?= ucfirst($category); ?></label>
+    <input type="checkbox" name="genres[]" value="<?= $category; ?>">
+  <?php } ?>
+  
+
+
+  <input type="submit" id="btn" name="submited" value="Rechercher">
+
+</form>
 
 </section>
 
+<!-- gestion du filtre de recherche en javascript -->
 <script type="text/javascript">
-  function filtre(){
-    var btn = document.getElementById('#button')
+  
+    var filtre = document.getElementById('filtre_search');
+    var btn = document.getElementById('button');
+    btn.addEventListener('click' ,function(event){ 
+    event.preventDefault();
+    filtre.style.display = 'block';  
+ })
 
-  }
 </script>
 
+ <!-- afficher les films  -->
 <?php foreach ($movies as $movie): ?>
 <div class="film">
   <ul>
