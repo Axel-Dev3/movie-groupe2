@@ -8,11 +8,15 @@
   </head>
   <body>
     <header>
-      <p><a href="admin/index.php">Admin</a></p>
       <ul>
-        <li><a href="register.php">Créer un compte</a></li>
-        <li><a href="login.php">Se connecter</a></li>
-        <li><a href="logout.php">Déconnexion</a></li>
+          <?php if(isLogged()) { ?>
+              <p><a href="admin/index.php">Admin</a></p>
+              <li><a href="logout.php">Déconnexion</a></li>
+              <li>Bonjour <?= ucfirst($_SESSION['user']['pseudo']) ?></li>
+          <?php } else { ?>
+              <li><a href="register.php">Inscription</a></li>
+              <li><a href="login.php">Connexion</a></li>
+          <?php } ?>
       </ul>
     </header>
 
