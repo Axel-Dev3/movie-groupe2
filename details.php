@@ -26,8 +26,8 @@ require('inc/header.php'); ?>
     <li><?= $movie['writers']; ?></li>
     <?php echo imageMovie($movie); ?>
     <li><a href="index.php">Retour</a></li>
-    <li><a href="favoris.php">favoris</a></li>
-
+    <li><a href="favoris.php?id=<?= $movie['id']; ?>">favoris</a></li>
+   
   </ul>
 </section>
 
