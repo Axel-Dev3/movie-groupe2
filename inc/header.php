@@ -10,13 +10,16 @@
     <header>
       <ul>
           <?php if(isLogged()) { ?>
-              <p><a href="admin/index.php">Admin</a></p>
               <li><a href="logout.php">Déconnexion</a></li>
               <li>Bonjour <?= ucfirst($_SESSION['user']['pseudo']) ?></li>
+              <?php if(isAdmin()) { ?>
+                  <p><a href="admin/index.php">Admin</a></p>
+              <?php } ?>
           <?php } else { ?>
               <li><a href="register.php">Inscription</a></li>
               <li><a href="login.php">Connexion</a></li>
           <?php } ?>
+
       </ul>
     </header>
 
