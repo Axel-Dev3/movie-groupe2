@@ -17,13 +17,11 @@ if (!empty($_GET['id']))
              echo ('Film ajouter a vos favoris' );
             } 
         else
-        {
-            die('403');
+        {            
+           '<p>'. die('    error 403').'</p>';
         }
-
-
     }
-else {
-
-    die('404');
-}
+else 
+    {
+        die('404');
+    }
